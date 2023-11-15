@@ -1,14 +1,18 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { userAuthentication } from '../../hooks/userAuthentication'
 
 const Register = () => {
   //#region Controller Service
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmedPassword, setConfirmedPassword] = useState('')
   const [error, setError] = useState('')
-  const handlerSubmit = (e) => {
+
+  const { createUser, error: authError, loading } = userAuthentication
+
+  const handlerSubmit = async (e) => {
     e.preventDefault()
     setError('')
     const user = {
@@ -16,19 +20,23 @@ const Register = () => {
       email,
       password
     }
-    if(password != confirmPassword){
-      setError('As senhas precisam ser iguais.')
+
+    if (password != confirmedPassword) {
+      setError('As senhas precisam ser iguais!')
       return
     }
 
-    console.table(user)
-}
-  //#endRegion
+    const res = await createUser(user)
+
+    console.table(res)
+  }
+  //#end region
   //#region View Browser Page
   return (
     <div>
       <h1>Compartilhe suas experiências com outros nomades</h1>
-      <form onSubmit={handlerSubmit}>
+      <form onSubmit={handlerSubmit}></form>
+      <form>
         <label>
           <span>Nome: </span>
           <input
@@ -36,7 +44,7 @@ const Register = () => {
             name="displayName"
             required
             value={displayName}
-            onChange = {(e) => setDisplayName(e.target.value)}
+            onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Entre con seu nomade nome"></input>
         </label>
         <label>
@@ -56,7 +64,7 @@ const Register = () => {
             name="password"
             required
             value={password}
-            onChange ={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Entre com sua senha"></input>
         </label>
         <label>
@@ -65,16 +73,16 @@ const Register = () => {
             type="password"
             name="corfirmedPasswor"
             required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmedPassword}
+            onChange={(e) => setConfirmedPassword(e.target.value)}
             placeholder="Entre com sua senha"></input>
         </label>
         <button className="btn">Cadastrar</button>
         {error && <p className='error'>{error}</p>}
       </form>
     </div>
-    //#endRegion
   )
+  //#end region
 }
 
 export default Register
