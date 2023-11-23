@@ -1,73 +1,73 @@
-import { db } from '../firebase/config'
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  signOut,
-} from 'firebase/auth'
-import { useReducer } from 'react'
+import { db } from '../firebase/config';
+import{
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile,
+    signOut,
+} from 'firebase/auth';
 import { useState, useEffect } from 'react'
 
-export const userAuthentication = () => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [cancelled, setCancelled] = useState(false)
+export const userAuthentication = () =>{
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(null)
+    const [cancelled, setCancelled] = useState(false)
 
-  const auth = getAuth()
-  function chackIfIsCancelled() {
-    if (cancelled) {
-      return
+    const auth = getAuth()
+
+    function checkIfIsCancelled(){
+        if(cancelled){
+            return
+        }
     }
 
-  }
+    async function createUser(data){
+        checkIfIsCancelled()
+        
+        setLoading(true)
+        setError(null)
 
-  async function createUser(data) {
-    checkIfIsCancelled()
+        try{
+            const { user } = await createUserWithEmailAndPassword(
+                auth,
+                data.email,
+                data.password
+            )
 
-    setLoading(true)
-    setError(null)
+            await updateProfile(user, {
+                displayName: data.displayName
+            })
 
-    try {
-      const { user } = await createUserWithEmailAndPassword(
+            setLoading(false)
+
+            return user
+        }catch(error){
+            console.error(error.message)
+            console.table(typeof error.message)
+
+            let systemErrorMessage
+
+            if(error.message.includes("Password")){
+                systemErrorMessage = "A senha precisa conter pelo menos 6 caracteres"
+            }else if(error.message.includes("email-already")){
+                systemErrorMessage = "E-mail já cadastrado"
+            }else{
+                systemErrorMessage = "Ocorreu um error, tente novamente mais tarde"
+            }
+            
+            setLoading(false)
+            setError(systemErrorMessage)
+        }
+    }
+    
+    useEffect(() => {
+        return () => setCancelled(true)
+    }, [])
+
+    return {
         auth,
-        data.email,
-        data.password
-      )
-
-      await updateProfile(user, {
-        displayName: data.displayName
-      })
-
-      setLoading(false)
-
-      return user
-    } catch (error) {
-      console.error(error.message)
-      console.table(typeof error.message)
-
-      let systemErrorMessage
-
-      if (error.message.includes("Password")) {
-        systemErrorMessage = "A senha precisa conter pelo menos 6 caracteres."
-      } else if (error.message.includes("email-already")) {
-        systemErrorMessage = "Email já cadastrado."
-      } else {
-        systemErrorMessage = "Ocorreu um error, tente novamente mais tarde."
-      }
-
-      setLoading(false)
-      setError(systemErrorMessage)
+        createUser,
+        error,
+        loading
     }
-  }
-
-  useEffect(() => {
-    setCancelled(true)
-  }, [])
-  return {
-    auth,
-    createUser,
-    error,
-    loading
-  }
 }
