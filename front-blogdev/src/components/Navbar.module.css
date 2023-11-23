@@ -30,6 +30,14 @@
     /* background-color: black; */
     color: #ffff;
     border-radius: 5px;
-    background: rgb(167,5,215);
-    background: linear-gradient(90deg, rgba(167,5,215,1) 0%, rgba(255,0,249,1) 55%, rgba(255,0,249,0.48783263305322133) 100%);
+    background: rgb(167, 5, 215);
+    background: linear-gradient(90deg, rgba(167, 5, 215, 1) 0%, rgba(255, 0, 249, 1) 55%, rgba(255, 0, 249, 0.48783263305322133) 100%);
+}
+
+.logout {
+    color: #000;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    border: 2px solid black;
 }

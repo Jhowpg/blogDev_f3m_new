@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { userAuthentication } from '../../hooks/userAuthentication'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   //#region Controller Service
@@ -9,8 +10,9 @@ const Register = () => {
   const [password, setPassword] = useState('')
   const [confirmedPassword, setConfirmedPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
-  const { createUser, error: authError, loading } = userAuthentication
+  const { createUser, error: authError, loading } = userAuthentication()
 
   const handlerSubmit = async (e) => {
     e.preventDefault()
@@ -25,18 +27,24 @@ const Register = () => {
       setError('As senhas precisam ser iguais!')
       return
     }
+    try {
+      const res = await createUser(user)
+      if (res) {
+        console.log(res)
+        navigate('/login')
+      }
 
-    const res = await createUser(user)
+    } catch (error) {
+      console.error(error)
+    }
 
-    console.table(res)
   }
   //#end region
   //#region View Browser Page
   return (
     <div>
       <h1>Compartilhe suas experiências com outros nomades</h1>
-      <form onSubmit={handlerSubmit}></form>
-      <form>
+      <form onSubmit={handlerSubmit}>
         <label>
           <span>Nome: </span>
           <input
