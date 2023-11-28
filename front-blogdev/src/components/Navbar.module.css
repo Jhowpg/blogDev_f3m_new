@@ -33,3 +33,11 @@
     background: rgb(167,5,215);
     background: linear-gradient(90deg, rgba(167,5,215,1) 0%, rgba(255,0,249,1) 55%, rgba(255,0,249,0.48783263305322133) 100%);
 }
+
+.logout{
+    width: 60px;
+    background-color: darkturquoise;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+}
