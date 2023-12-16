@@ -1,0 +1,27 @@
+.login {
+  text-align: center;
+}
+
+.login p {
+  color: #aaa;
+}
+
+.btn {
+  margin-top: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  gap: 10px;
+  border: 1px solid #ededef;
+  background-color: white;
+  color: #000;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  padding: 15px;
+}
+
+.btn:hover {
+  border: 1px solid #2d79f3;
+}

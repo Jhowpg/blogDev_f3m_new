@@ -11,6 +11,11 @@ import Footer from './components/Footer'
 import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
 import errorLoading from './assets/errorLoading.gif'
+import CreatePost from './pages/CreatePost/CreatePot'
+import DashBoard from './pages/DashBoard/DashBoard'
+import Post from './pages/Post/Post'
+import EditPost from './pages/EditPost/EditPost'
+
 
 function App() {
   const [user, setUser] = useState(undefined)
@@ -21,12 +26,12 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, user => (
       setUser(user)
-      ))
-    }, [auth])  
-    if (loadingUser) {
-      return <div className='container load'> <img src={errorLoading} alt="Gif Loading User" /></div>
-    }
-    
+    ))
+  }, [auth])
+  if (loadingUser) {
+    return <div className='container load'> <img src={errorLoading} alt="Gif Loading User" /></div>
+  }
+
   return (
     <>
       <AuthProvidor value={{ user }}>
@@ -38,6 +43,10 @@ function App() {
               <Route path='/about' element={<About />}></Route>
               <Route path='/register' element={<Register />}></Route>
               <Route path='/login' element={<Login />}></Route>
+              <Route path='/post/create' element={<CreatePost />}></Route>
+              <Route path='/dashboard' element={<DashBoard />}></Route>
+              <Route path='/posts/:id' element={<Post />}></Route>
+              <Route path='/posts/edit/:id' element={<EditPost />}></Route>
             </Routes>
           </div>
           <Footer />

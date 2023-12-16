@@ -5,7 +5,10 @@ import {
     signInWithEmailAndPassword,
     updateProfile,
     signOut,
+    signInWithPopup,
+    GoogleAuthProvider
 } from 'firebase/auth';
+const provider = new GoogleAuthProvider()
 import { useState, useEffect } from 'react'
 
 export const userAuthentication = () => {
@@ -95,7 +98,37 @@ export const userAuthentication = () => {
             setError(systemErrorMessage)
         }
     }
+    const login_with_google = async () => {
+        setLoading(true)
+        setError(null)
 
+        await signInWithPopup(auth, provider).then((result) => {
+            const credential = GoogleAuthProvider.credentialFromResult(result)
+            const token = credential.accessToken
+            const user = result.user
+            console.log(user)
+            return user
+        }).catch((error) => {
+            let systemErrorMessage;
+
+            switch (error.code) {
+                case 'auth/popup-closed-by-user':
+                    systemErrorMessage = 'O popup de autenticação foi fechado antes da operação ser concluída.';
+                    break;
+                case 'auth/cancelled-popup-request':
+                    systemErrorMessage = 'Múltiplas solicitações de popups foram feitas.';
+                    break;
+                case 'auth/operation-not-allowed':
+                    systemErrorMessage = 'A operação não é permitida.';
+                    break;
+                default:
+                    systemErrorMessage = 'Ocorreu um erro, tente novamente mais tarde.';
+            }
+
+            setError(systemErrorMessage)
+        })
+        setLoading(false)
+    }
     async function userLogout() {
         checkIfIsCancelled()
         setLoading(true)
@@ -135,6 +168,7 @@ export const userAuthentication = () => {
         userLogin,
         userLogout,
         error,
-        loading
+        loading,
+        login_with_google
     }
 }
